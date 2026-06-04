@@ -1,17 +1,14 @@
 import os
 import random
 import json
-import aiohttp
-from collections import defaultdict
+
+try:
+    import requests
+except:
+    requests = None
 
 from telegram import Update
-from telegram.ext import (
-    Application,
-    CommandHandler,
-    MessageHandler,
-    ContextTypes,
-    filters
-)
+from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
 
 # =====================
 # ENV

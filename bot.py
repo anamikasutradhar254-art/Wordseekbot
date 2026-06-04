@@ -123,10 +123,22 @@ async def new(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"{length}-letter WordSeek started!\nStart guessing..."
     )
 
-async def new4(update, context): await new(update, context)
-async def new5(update, context): await new(update, context)
-async def new6(update, context): await new(update, context)
+async def new4(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await start_game(update, context, 4)
 
+async def new5(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await start_game(update, context, 5)
+
+async def new6(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await start_game(update, context, 6)
+async def start_game(update: Update, context: ContextTypes.DEFAULT_TYPE, length: int):
+    chat = update.effective_chat.id
+
+    new_game(chat, length)
+
+    await update.message.reply_text(
+        f"{length}-letter WordSeek started!\nStart guessing..."
+    )
 # ================= GUESS =================
 async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat.id

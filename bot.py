@@ -1,7 +1,7 @@
 import os
 import random
 import json
-import requests
+import aiohttp
 from collections import defaultdict
 
 from telegram import Update

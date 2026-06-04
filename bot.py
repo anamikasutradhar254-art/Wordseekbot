@@ -52,6 +52,15 @@ def check_guess(secret, guess):
 
     return " ".join(result)
 
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "👋 Welcome!\n\n"
+        "🎮 Word Game Bot Ready\n"
+        "Use:\n"
+        "/new4 /new5 /new6\n"
+        "/leaderboard"
+    )
+
 # -------------------------
 # START GAME
 # -------------------------
@@ -147,7 +156,7 @@ def main():
     app.add_handler(CommandHandler("new6", new6))
     app.add_handler(CommandHandler("leaderboard", leaderboard_cmd))
     app.add_handler(CommandHandler("help", help_cmd))
-
+    app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle))
 
     print("Bot running...")

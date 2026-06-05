@@ -232,15 +232,12 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat.id
     user = update.effective_user.id
 
-    if not msg.text:
-        return
+    name = update.effective_user.full_name
 
-    text = clean(msg.text)
+if update.effective_user.username:
+    name = f"@{update.effective_user.username}"
 
-    if chat not in games or not games[chat]["active"]:
-        return
-
-    game = games[chat]
+user_names[user] = name
 
     if len(text) != game["length"]:
         return
@@ -288,23 +285,57 @@ async def leaderboard_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data = leaderboard[chat]
 
     if not data:
-        await update.message.reply_text("No scores")
+        await update.message.reply_text("❌ No scores yet")
         return
 
-    text = "🏆 GROUP LEADERBOARD\n\n"
-    for i, (u, s) in enumerate(sorted(data.items(), key=lambda x: x[1], reverse=True)[:10]):
-        text += f"{i+1}. {u} - {s}\n"
+    text = "🏆 GROUP LEADERBOARD 🏆\n\n"
+
+    medals = ["🥇", "🥈", "🥉"]
+
+    sorted_users = sorted(
+        data.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )[:10]
+
+    for i, (uid, score) in enumerate(sorted_users):
+
+        name = user_names.get(uid, f"User {uid}")
+
+        if i < 3:
+            icon = medals[i]
+        else:
+            icon = "🔅"
+
+        text += f"{icon} {name} - {score:,} pts\n"
 
     await update.message.reply_text(text)
-
 async def global_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     if not global_leaderboard:
-        await update.message.reply_text("No global scores")
+        await update.message.reply_text("❌ No global scores")
         return
 
-    text = "🌍 GLOBAL LEADERBOARD\n\n"
-    for i, (u, s) in enumerate(sorted(global_leaderboard.items(), key=lambda x: x[1], reverse=True)[:10]):
-        text += f"{i+1}. {u} - {s}\n"
+    text = "🌍 GLOBAL LEADERBOARD 🌍\n\n"
+
+    medals = ["🥇", "🥈", "🥉"]
+
+    sorted_users = sorted(
+        global_leaderboard.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )[:20]
+
+    for i, (uid, score) in enumerate(sorted_users):
+
+        name = user_names.get(uid, f"User {uid}")
+
+        if i < 3:
+            icon = medals[i]
+        else:
+            icon = "🔅"
+
+        text += f"{icon} {name} - {score:,} pts\n"
 
     await update.message.reply_text(text)
 

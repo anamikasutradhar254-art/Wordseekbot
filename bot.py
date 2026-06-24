@@ -152,7 +152,115 @@ WORDLIST = {
         "gray","grew","grid","grip","hair","half","hall","hand","hard","harm","hate","head","heal","hear","heat","held","hell","help","hill","hire",
         "hold","hole","holy","hope","host","hour","huge","hunt","hurt","icon","inch","into","item","join","joke","king","knee","knew","land","lane",
         "last","late","lead","leaf","left","lend","less","life","lift","like","line","link","list","live","logo","long","look","lord","lost","main",
-        "bout","bour","boun","boud","boul"
+        "bout","bour","boun","boud","boul","army","atom","aunt","auto","axis","baby","bait","bald","barn","beam","bean","beef","been","beer","bend","bike","bind","bird","bite","blew","blog","blue","boil","bold","bolt","boot","boss","brag","bran","brew","buck","buff","bugs","bulb","bull","bump","bunk","bury","bust",
+
+"busy","cage","cape","card","care","cart","cave","cede","cent","chef",
+
+"chin","clan","claw","clip","clue","coal","coin","cold","colt","comb",
+
+"cone","cook","cool","cord","cork","corn","crew","crop","cube","cure",
+
+"curl","dare","dash","deck","dent","dice","dock","doom","drag","drum",
+
+"echo","envy","epic","exam","fame","fang","farm","fate","fern","film",
+
+"find","fire","firm","fist","fizz","flag","flea","fled","flex","flip",
+
+"foam","fork","fund","fury","gale","gang","gasp","gaze","germ","glow",
+
+"glue","golf","grim","grow","gulf","guru","hail","hawk","haze","herb",
+
+"hide","hint","hive","horn","jade","jazz","jeep","jolt","jury","keen",
+
+"kept","kite","lamb","lamp","lava","lazy","leap","lime","lion","lump",
+
+"lung","maid","melt","menu","mess","mint","moon","moss","nest","news",
+
+"nova","oath","obey","odor","oval","pace","pack","palm","park","pear",
+
+"peck","peek","pest","pile","pine","pink","pipe","pool","quiz","race",
+
+"rage","rail","rank","rest","rice","ride","ripe","risk","robe","ruby",
+
+"rush","rust","sack","sage","sail","seed","ship","shoe","shot","silk",
+
+"skin","slam","slap","slim","slot","snap","soap","sock","soil","song",
+
+"spin","star","stem","step","stir","such","suit","swim","tank","task",
+
+"tent","tide","tile","tiny","tofu","tone","trap","trip","tune","vast",
+
+"veal","vent","visa","void","wake","warm","weak","weed","whip","wing",
+
+"wire","wise","wood","wool","yarn","yoga","zone","zoom","acre","afar","aged","akin","ally","alto","amid","ammo","amps",
+
+"apex","aqua","arch","arid","ashy","aura","avid","awry","axle","babe",
+
+"bark","bash","bead","beak","beam","bean","beep","beet","beta","bias",
+
+"bids","bier","bile","bind","bite","blew","blob","blog","blot","blur",
+
+"boar","boat","body","boil","bold","bolt","bomb","bond","bone","book",
+
+"boom","boot","bore","boss","bowl","brag","bran","brew","buck","buff",
+
+"bulb","bull","bunk","bury","bush","bust","cafe","cage","cake","calf",
+
+"cape","card","care","cart","cask","cave","cede","cell","chef","chin",
+
+"clad","clan","claw","clip","clog","clue","coal","coat","coil","coin",
+
+"cola","cold","colt","comb","cone","cook","cool","cope","cord","cork",
+
+"corn","coup","crab","crib","crow","cube","cure","curl","dame","damp",
+
+"dare","dart","dawn","deaf","deck","dent","dice","dime","dine","ding",
+
+"dock","doom","door","dove","drag","drip","drop","drum","duke","dusk",
+
+"echo","envy","epic","exam","fade","fame","fang","fare","farm","fate",
+
+"fern","file","film","fine","fins","fire","firm","fish","fist","fizz",
+
+"flag","flap","flea","fled","flip","foam","foes","fork","fort","frog",
+
+"fuel","fund","fury","gala","gale","gang","gasp","gate","gear","germ",
+
+"gift","glow","glue","goal","golf","gong","grab","grim","grin","grit",
+
+"grow","gulf","guru","hail","hawk","haze","herb","hide","hike","hint",
+
+"hive","horn","jade","jazz","jeep","jolt","jury","keen","kept","kick",
+
+"kilo","kite","kiwi","knob","lace","lamb","lamp","lava","lawn","lazy",
+
+"leaf","leak","leap","lime","limb","lion","lisp","loan","lock","loom",
+
+"loud","luck","lump","lung","maid","mail","malt","many","mark","mask",
+
+"maze","melt","menu","mess","mild","mint","mist","mock","moon","moss",
+
+"nest","news","noon","nova","oath","obey","odor","omen","opal","oval",
+
+"pace","pack","palm","park","pear","peck","peek","pest","pick","pile",
+
+"pine","pink","pipe","plot","plug","poem","pool","quiz","race","rack",
+
+"rage","rail","rank","reef","rest","rice","ride","ripe","risk","road",
+
+"robe","rock","ruby","rude","rush","rust","sack","sage","sail","seal",
+
+"seed","ship","shoe","shop","shot","silk","skin","slam","slap","slim",
+
+"slot","snap","soap","sock","soil","song","spin","star","stem","step",
+
+"stir","such","suit","swan","swim","tank","task","tent","tide","tile",
+
+"tiny","tofu","tone","tool","trap","trip","tune","vast","veal","vent",
+
+"visa","void","wake","wall","warm","wave","weak","weed","west","whip",
+
+"wing","wire","wise","wolf","wood","wool","yarn","yoga","zero","zone","zoom"
     ],
     5: [
         "apple","crane","stone","brain","table","chair","plant","smile","grape","plane","train","flame","water","earth","power","money","dream","story","music","party",
@@ -645,7 +753,42 @@ async def add_points(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         f"✅ Points updated\n\nUser: {target}\nChange: {points}\nTotal Global: {global_leaderboard[target]}"
     )
+    
+async def removepoints(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id != OWNER_ID:
+        await update.message.reply_text("❌ Not allowed")
+        return
 
+    target = get_target_user(update, context)
+
+    if not target:
+        await update.message.reply_text(
+            "Usage:\n/removepoints user_id points"
+        )
+        return
+
+    try:
+        if update.message.reply_to_message:
+            points = int(context.args[0])
+        else:
+            points = int(context.args[1])
+    except:
+        await update.message.reply_text("❌ Invalid points")
+        return
+
+    global_leaderboard[target] -= points
+
+    if global_leaderboard[target] < 0:
+        global_leaderboard[target] = 0
+
+    save_data()
+
+    await update.message.reply_text(
+        f"✅ Points Removed\n\n"
+        f"User: {target}\n"
+        f"Removed: {points}\n"
+        f"Remaining: {global_leaderboard[target]}"
+    )
 
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
@@ -820,10 +963,10 @@ def main():
     app.add_handler(CommandHandler("ban", ban_user))
     app.add_handler(CommandHandler("unban", unban_user))
     app.add_handler(CommandHandler("addpoints", add_points))
-
+    app.add_handler(CommandHandler("removepoints", removepoints))
     app.add_handler(CallbackQueryHandler(button_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle))
-
+   
     print("🚀 WordSeek Ultimate Running...")
     app.run_polling()
 
